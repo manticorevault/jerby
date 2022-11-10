@@ -1,4 +1,5 @@
 import Sidebar from "../components/Sidebar"
+import Timeline from "../components/home/Timeline"
 
 const style = {
   wrapper: `flex justify-center h-screen w-screen select-none bg-[#111827] text-[#00ff00]`,
@@ -11,9 +12,7 @@ export default function Home() {
       <div className={style.content}>
         <Sidebar />
 
-        <h2>
-          Timeline
-        </h2>
+        <Timeline />
 
         <h2>
           Addons
