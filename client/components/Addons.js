@@ -42,7 +42,8 @@ const Addons = () => {
                         key={ index } 
                         className={ style.item }
                     >
-                        <div className={ style.a }>
+                        <div className={ style.adsItemLeft }>
+                            <div> </div>
                         </div> 
                     </div>
                 )) }
