@@ -66,6 +66,30 @@ const ProfileHeader = () => {
                 />
             </div>
         </div>
+        <div className={ style.details }>
+            <div>
+                <div className={ style.primary }>
+                    Artie
+                </div>
+            </div>
+            <div className={ style.secondary }>
+                {
+                    currentAccount && (
+                        <>
+                            @{ currentAccount.slice(0, 8) }...{ currentAccount.slice(37) }
+                        </>
+                    )
+                }
+            </div>
+        </div>
+        <div className={ style.nav }>
+            <div>
+                Nuts
+            </div>
+            <div>
+                Mints
+            </div>
+        </div>
     </div>
   )
 }
