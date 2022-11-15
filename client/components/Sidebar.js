@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Link from "next/link";
+
 import { FiMoreHorizontal } from "react-icons/fi";
 import { GiSquirrel, GiTreehouse } from "react-icons/gi"
 import { BsHouse } from "react-icons/bs"
