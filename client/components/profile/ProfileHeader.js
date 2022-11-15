@@ -23,6 +23,7 @@ const ProfileHeader = () => {
 
     const router = useRouter()
 
+    const currentAccount = "0xbFaA080663b550Fa648ECE4CeD5EF0658693EF50"
     const isProfileImageNft = true;
 
 
