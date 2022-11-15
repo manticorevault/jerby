@@ -19,8 +19,7 @@ const style = {
     adsItemImage: `rounded-xl h-14 w-14 object-cover`,
     profileDetails: `flex-1`,
     name: `font-bold`,
-    handle: `text-[#8899a6]`,
-    followButton: `bg-white text-black px-3 py-1 rounded-full text-xs font-bold`,
+    address: `text-[#8899a6]`
   }
 const Addons = () => {
   return (
@@ -43,10 +42,36 @@ const Addons = () => {
                         className={ style.item }
                     >
                         <div className={ style.adsItemLeft }>
-                            <div> </div>
-                        </div> 
+                            <div className={ style.adsItemCategory }> 
+                                { item.category }
+                            </div>
+                            <div className={ style.adsItemTitle }>
+                                { item.title }    
+                            </div>    
+                        </div>
+                        <div className={ style.adsItemRight }>
+                            <img
+                                src={ item.image }
+                                alt={ item.category }
+                                className={ style.adsItemImage } 
+                            />
+                        </div>  
                     </div>
                 )) }
+                <div className={ style.showMore }>
+                    Show more
+                </div>
+                <div className={ style.section }>
+                    <div className={ style.title }>
+                        Created by:
+                        <div className={ style.name }>
+                            Artur Serra
+                        </div>
+                        <div className={ style.address }>
+                            0xbFaA080663b550Fa648ECE4CeD5EF0658693EF50
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
