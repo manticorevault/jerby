@@ -7,6 +7,7 @@ export const SqrrlContext = createContext();
 export const SqrrlProvider = ({ children }) => {
     const [appStatus, setAppStatus] = useState()
     const [currentAccount, setCurrentAccount] = useState("")
+    const [nuts, setNuts] = useState("")
 
     const router = useRouter();
 
@@ -89,8 +90,87 @@ export const SqrrlProvider = ({ children }) => {
         }
     }
 
+    const fetchNuts = async () => {
+        const query = `
+            *[_type == "nuts"] {
+                "author": author->{name, walletAddress, profileImage, isProfileImageMint},
+                nut, 
+                timestamp
+            }|order(timestamp desc)
+        `
+
+        const sanityResponse = await client.fetch(query)
+
+        setNuts([])
+
+        sanityResponse.forEach(async item => {
+            const profileImageUrl = await getMintedProfileImage(
+                item.author.profileImage,
+                item.author.isProfileImageMint
+            )
+
+            if (item.author.isProfileImageMint) {
+                const newItem = {
+                    nut: item.nut,
+                    timestamp: item.timestamp,
+                    author: {
+                        name: item.author.name,
+                        walletAddress: item.author.walletAddress,
+                        profileImage: profileImageUrl,
+                        isProfileImageMint: item.author.isProfileImageMint
+                    },
+                }
+
+                setNuts(prevState => [...prevState, newItem])
+            } else {
+                setNuts(prevState => [...prevState, item])
+            }
+        })
+    }
+
+    const getCurrentUserDetails = async (userAccount = currentAccount) => {
+        if (appStatus !== "connected") return
+
+        const query = `
+            *[_type == "users" && _id == "${userAccount}"]{
+                "nuts": nuts[]->{timestamp, nut}|order(timestamp desc),
+                name,
+                profileImage,
+                isProfileImageMint,
+                coverPhoto,
+                walletAddress
+            }
+        `
+
+        const response = await client.fetch(query)
+
+        const profileImageUrl = await getMintedProfileImage(
+            response[0].profileImage,
+            response[0].isProfileImageMint,
+        )
+
+        setCurrentUser({
+            nuts: response[0].nuts,
+            name: response[0].name,
+            profileImage: profileImageUri,
+            walletAddress: response[0].walletAddress,
+            coverPhoto: response[0].coverPhoto,
+            isProfileImageMint: response[0].isProfileImageMint,
+        })
+    }
+
     return(
-        <SqrrlContext.Provider value={{ appStatus, currentAccount, connectToWallet}}>
+        <SqrrlContext.Provider value={{ 
+            appStatus, 
+            currentAccount, 
+            connectToWallet,
+            nuts,
+            fetchNuts,
+            setAppStatus,
+            getMintedProfileImage,
+            currentUser,
+            getCurrentUserDetails,
+        }}>
             { children }
         </SqrrlContext.Provider>
     )

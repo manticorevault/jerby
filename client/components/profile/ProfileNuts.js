@@ -13,7 +13,7 @@ const nuts = [
       userName: "0xbFaA080663b550Fa648ECE4CeD5EF0658693EF50",
       avatar: "https://media.tenor.com/jMdv7eVShFoAAAAC/squirrel-pixel.gif",
       text: "All Blacks x Barbarians",
-      isProfileImageMint: false,
+      isProfileImageMint: true,
       timestamp: "2022-02-14T12:00:00.000Z", 
   },
   {

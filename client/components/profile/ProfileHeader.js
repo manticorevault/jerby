@@ -24,7 +24,7 @@ const ProfileHeader = () => {
     const router = useRouter()
 
     const currentAccount = "0xbFaA080663b550Fa648ECE4CeD5EF0658693EF50"
-    const isProfileImageNft = true;
+    const isProfileImageMint = true;
 
 
   return (
@@ -56,13 +56,13 @@ const ProfileHeader = () => {
         </div>
         <div className={ style.profileImageContainer }>
             <div className={
-                isProfileImageNft ? "hex" : style.profileImageContainer
+                isProfileImageMint ? "hex" : style.profileImageContainer
             }>
                 <img 
                     src="https://media.tenor.com/jMdv7eVShFoAAAAC/squirrel-pixel.gif"
                     alt="Dancing Squirrel GIF"
                     className={ 
-                        isProfileImageNft ? style.profileImageNft : style.profileImage
+                        isProfileImageMint ? style.profileImageNft : style.profileImage
                         }
                 />
             </div>
