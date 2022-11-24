@@ -1,4 +1,6 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { client } from "../../lib/client";
+import { SqrrlContext } from "../../context/SqrrlContext";
 
 const style = {
     wrapper: `px-4 flex flex-row border-b border-[#38444d] pb-4`,
@@ -17,10 +19,42 @@ const style = {
 const Nutcracker = () => {
 
     const [nutMessage, setNutMessage] = useState("")
+    const { currentAccount } = useContext(SqrrlContext)
 
-    const postMessage = (event) => {
+    const postMessage = async (event) => {
         event.preventDefault()
-        console.log(nutMessage)
+        
+        if(!nutMessage) return
+
+        const nutId = `${currentAccount}_${Date.now()}`
+
+        const nutDoc = {
+            _type: "nuts",
+            _id: nutId,
+            nut: nutMessage,
+            timestamp: new Date(Date.now()).toISOString(),
+            author: {
+                _key: nutId,
+                _ref: currentAccount,
+                _type: "reference",
+            },
+        }
+
+        await client.createIfNotExists(nutDoc)
+
+        await client
+                .patch(currentAccount)
+                .setIfMissing({ nuts: [] })
+                .insert("after", "nuts[-1]", [
+                    {
+                        _key: nutId,
+                        _ref: nutId,
+                        _type: "reference",
+                    },
+                ]).commit()
+
+        await fetchNuts()
+        setNutMessage("");
     }
 
     return (
