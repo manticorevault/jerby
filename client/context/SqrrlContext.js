@@ -7,6 +7,7 @@ export const SqrrlContext = createContext();
 export const SqrrlProvider = ({ children }) => {
     const [appStatus, setAppStatus] = useState()
     const [currentAccount, setCurrentAccount] = useState("")
+    const [currentUser, setCurrentUser] = useState("")
     const [nuts, setNuts] = useState("")
 
     const router = useRouter();
@@ -14,6 +15,13 @@ export const SqrrlProvider = ({ children }) => {
     useEffect(() => {
         checkIfWalletIsConnected()
     }, [])
+
+    useEffect(() => {
+        if (!currentAccount || appStatus === "connected") return
+        
+        getCurrentUserDetails(currentAccount)
+        fetchNuts()
+    }, [currentAccount, appStatus])
 
     const checkIfWalletIsConnected = async () => {
         if(!window.ethereum) return setAppStatus("noMetamask")
@@ -90,6 +98,14 @@ export const SqrrlProvider = ({ children }) => {
         }
     }
 
+    const getMintedProfileImage = async (imageUri, isMint) => {
+        if (isMint) {
+            return `https://gateway.pinata.cloud/ipfs/${imageUri}`
+        } else if (!isMint) {
+            return imageUri
+        }
+    }
+
     const fetchNuts = async () => {
         const query = `
             *[_type == "nuts"] {
@@ -152,7 +168,7 @@ export const SqrrlProvider = ({ children }) => {
         setCurrentUser({
             nuts: response[0].nuts,
             name: response[0].name,
-            profileImage: profileImageUri,
+            // profileImage: profileImageUri,
             walletAddress: response[0].walletAddress,
             coverPhoto: response[0].coverPhoto,
             isProfileImageMint: response[0].isProfileImageMint,
@@ -166,10 +182,7 @@ export const SqrrlProvider = ({ children }) => {
             connectToWallet,
             nuts,
             fetchNuts,
-            setAppStatus,
-            getMintedProfileImage,
-            currentUser,
-            getCurrentUserDetails,
+            setAppStatus
         }}>
             { children }
         </SqrrlContext.Provider>

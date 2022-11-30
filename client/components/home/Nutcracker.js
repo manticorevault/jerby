@@ -35,8 +35,8 @@ const Nutcracker = () => {
             timestamp: new Date(Date.now()).toISOString(),
             author: {
                 _key: nutId,
-                _ref: currentAccount,
                 _type: "reference",
+                _ref: currentAccount,
             },
         }
 
@@ -53,7 +53,6 @@ const Nutcracker = () => {
                     },
                 ]).commit()
 
-        await fetchNuts()
         setNutMessage("");
     }
 
