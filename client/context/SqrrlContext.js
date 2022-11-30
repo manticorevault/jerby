@@ -109,7 +109,11 @@ export const SqrrlProvider = ({ children }) => {
     const fetchNuts = async () => {
         const query = `
             *[_type == "nuts"] {
-                "author": author->{name, walletAddress, profileImage, isProfileImageMint},
+                "author": author->{
+                    name, 
+                    walletAddress, 
+                    profileImage, 
+                    isProfileImageMint},
                 nut, 
                 timestamp
             }|order(timestamp desc)
@@ -119,28 +123,24 @@ export const SqrrlProvider = ({ children }) => {
 
         setNuts([])
 
-        sanityResponse.forEach(async item => {
+        sanityResponse.forEach(async (items) => {
             const profileImageUrl = await getMintedProfileImage(
                 item.author.profileImage,
                 item.author.isProfileImageMint
             )
 
-            if (item.author.isProfileImageMint) {
-                const newItem = {
-                    nut: item.nut,
-                    timestamp: item.timestamp,
-                    author: {
-                        name: item.author.name,
-                        walletAddress: item.author.walletAddress,
-                        profileImage: profileImageUrl,
-                        isProfileImageMint: item.author.isProfileImageMint
-                    },
-                }
-
-                setNuts(prevState => [...prevState, newItem])
-            } else {
-                setNuts(prevState => [...prevState, item])
+            const newItem = {
+                nut: item.nut,
+                timestamp: item.timestamp,
+                author: {
+                    name: items.author.name,
+                    walletAddress: items.author.walletAddress,
+                    profileImage: items.profileImageUrl,
+                    isProfileImageMint: items.author.isProfileImageMint
+                },
             }
+        
+            setNuts(prevState => [...prevState, newItem])
         })
     }
 
@@ -158,20 +158,15 @@ export const SqrrlProvider = ({ children }) => {
             }
         `
 
-        const response = await client.fetch(query)
-
-        const profileImageUrl = await getMintedProfileImage(
-            response[0].profileImage,
-            response[0].isProfileImageMint,
-        )
+        const sanityResponse = await client.fetch(query)
 
         setCurrentUser({
-            nuts: response[0].nuts,
-            name: response[0].name,
-            // profileImage: profileImageUri,
-            walletAddress: response[0].walletAddress,
-            coverPhoto: response[0].coverPhoto,
-            isProfileImageMint: response[0].isProfileImageMint,
+            nuts: sanityResponse[0].nuts,
+            name: sanityResponse[0].name,
+            profileImage: sanityResponse[0].profileImage,
+            isProfileImageMint: sanityResponse[0].isProfileImageMint,
+            coverPhoto: sanityResponse[0].coverPhoto,
+            walletAddress: sanityResponse[0].walletAddress,
         })
     }
 
@@ -180,9 +175,10 @@ export const SqrrlProvider = ({ children }) => {
             appStatus, 
             currentAccount, 
             connectToWallet,
-            nuts,
             fetchNuts,
-            setAppStatus
+            nuts,
+            currentUser,
+            getCurrentUserDetails,
         }}>
             { children }
         </SqrrlContext.Provider>
